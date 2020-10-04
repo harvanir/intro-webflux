@@ -1,9 +1,9 @@
 package org.harvanir.demo.introwebflux.webflux.service;
 
-import org.harvanir.demo.introwebflux.webflux.domain.entity.CreateItemRequest;
-import org.harvanir.demo.introwebflux.webflux.domain.entity.ItemResponse;
-import org.harvanir.demo.introwebflux.webflux.domain.entity.UpdateItemReqest;
-import org.harvanir.demo.introwebflux.webflux.repository.ItemRepository;
+import org.harvanir.demo.introwebflux.domain.entity.CreateItemRequest;
+import org.harvanir.demo.introwebflux.domain.entity.ItemResponse;
+import org.harvanir.demo.introwebflux.domain.entity.UpdateItemReqest;
+import org.harvanir.demo.introwebflux.webflux.repository.ReactiveItemRepository;
 import org.harvanir.demo.introwebflux.webflux.repository.entity.Item;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
@@ -15,20 +15,22 @@ import java.util.function.Supplier;
 
 /** @author Harvan Irsyadi */
 @Service
-public class DefaultItemService implements ItemService {
+public class DefaultReactiveItemService implements ReactiveItemService {
 
   private static final String FIND_WITH_DELAY =
-      "select i.id, i.name, i.price, i.quantity %s from items i where id in($1)";
+      "select i.id, i.name, i.price, i.quantity %s from items i where id = $1";
 
-  private final ItemRepository itemRepository;
+  private final ReactiveItemRepository reactiveItemRepository;
 
   private final ServiceMapper serviceMapper;
 
   private final DatabaseClient databaseClient;
 
-  public DefaultItemService(
-      ItemRepository itemRepository, ServiceMapper serviceMapper, DatabaseClient databaseClient) {
-    this.itemRepository = itemRepository;
+  public DefaultReactiveItemService(
+      ReactiveItemRepository reactiveItemRepository,
+      ServiceMapper serviceMapper,
+      DatabaseClient databaseClient) {
+    this.reactiveItemRepository = reactiveItemRepository;
     this.serviceMapper = serviceMapper;
     this.databaseClient = databaseClient;
   }
@@ -40,7 +42,7 @@ public class DefaultItemService implements ItemService {
     item.setCreatedAt(now);
     item.setUpdatedAt(now);
 
-    return itemRepository.save(item).map(serviceMapper::mapToDomainEntity);
+    return reactiveItemRepository.save(item).map(serviceMapper::mapToDomainEntity);
   }
 
   private Supplier<DataNotFoundException> getNotFoundSupplier() {
@@ -50,7 +52,7 @@ public class DefaultItemService implements ItemService {
   @Transactional
   @Override
   public Mono<ItemResponse> update(UpdateItemReqest request) {
-    return itemRepository
+    return reactiveItemRepository
         .findById(request.getId())
         .switchIfEmpty(Mono.error(getNotFoundSupplier()))
         .flatMap(
@@ -58,13 +60,13 @@ public class DefaultItemService implements ItemService {
               serviceMapper.setPropertyForUpdate(request, item);
               item.setUpdatedAt(LocalDateTime.now());
 
-              return itemRepository.save(item).map(serviceMapper::mapToDomainEntity);
+              return reactiveItemRepository.save(item).map(serviceMapper::mapToDomainEntity);
             });
   }
 
   @Override
   public Mono<ItemResponse> get(Integer id) {
-    return itemRepository
+    return reactiveItemRepository
         .findById(id)
         .switchIfEmpty(Mono.error(getNotFoundSupplier()))
         .map(serviceMapper::mapToDomainEntity);

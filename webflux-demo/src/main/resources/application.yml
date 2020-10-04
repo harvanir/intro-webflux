@@ -9,6 +9,13 @@ spring:
     password: postgres
     pool:
       enabled: true
-      #      validation-query: SELECT 1; # slow performance when enabled
+      #validation-query: SELECT 1; # slow performance when enabled
       initial-size: 10 # default value
       max-size: 300 # default value
+debug: false # set as true to see autoconfiguration report
+logging:
+  pattern:
+    console: "[%date{YYYY/MM/dd HH:mm:ss:SSS}] %clr([${PID:- }]){magenta} -- %clr([%level]){green} [%thread] %clr([%logger{10}:%line]){cyan} : %msg%n"
+  level:
+    org.springframework.data.r2dbc: trace
+    #org.springframework.transaction: trace

@@ -1,8 +1,8 @@
 package org.harvanir.demo.introwebflux.webflux.service;
 
-import org.harvanir.demo.introwebflux.webflux.domain.entity.CreateItemRequest;
-import org.harvanir.demo.introwebflux.webflux.domain.entity.ItemResponse;
-import org.harvanir.demo.introwebflux.webflux.domain.entity.UpdateItemReqest;
+import org.harvanir.demo.introwebflux.domain.entity.CreateItemRequest;
+import org.harvanir.demo.introwebflux.domain.entity.ItemResponse;
+import org.harvanir.demo.introwebflux.domain.entity.UpdateItemReqest;
 import org.harvanir.demo.introwebflux.webflux.repository.entity.Item;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

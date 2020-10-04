@@ -30,9 +30,12 @@ spring:
           use_jdbc_metadata_defaults: false
         format_sql: true
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+debug: false # set as true to see autoconfiguration report
 logging:
+  pattern:
+    console: "[%date{YYYY/MM/dd HH:mm:ss:SSS}] %clr([${PID:- }]){magenta} -- %clr([%level]){green} [%thread] %clr([%logger{10}:%line]){cyan} : %msg%n"
   level:
-#    org.springframework.data: trace
-#    org.springframework.transaction: trace
-#    org.hibernate: trace
+    #org.hibernate: trace
     org.hibernate.SQL: debug
+    org.springframework.jdbc.core.JdbcTemplate: debug
+    #org.springframework.transaction: trace

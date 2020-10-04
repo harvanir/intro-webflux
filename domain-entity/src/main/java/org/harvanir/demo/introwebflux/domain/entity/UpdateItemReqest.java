@@ -1,4 +1,4 @@
-package org.harvanir.demo.introwebflux.webflux.domain.entity;
+package org.harvanir.demo.introwebflux.domain.entity;
 
 import lombok.Data;
 
@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 
 /** @author Harvan Irsyadi */
 @Data
-public class CreateItemRequest {
+public class UpdateItemReqest {
+
+  private Integer id;
 
   private String name;
 
